@@ -70,13 +70,11 @@ exports.modifySauce = (req, res, next) => {
 
 exports.deleteSauce = (req, res, next) => {
 
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, `${process.env.KEY_TOKEN}`);
-    const userId = decodedToken.userId;
+    
 
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
-            if (sauce.userId == req.auth.userId) {
+            if (sauce.userId === req.auth.userId) {
                 const filename = sauce.imageUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`, () => {
                     Sauce.deleteOne({ _id: req.params.id })
